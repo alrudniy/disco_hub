@@ -1,0 +1,323 @@
+{
+  "systems": [
+    "dense",
+    "hybrid",
+    "hybrid+graph"
+  ],
+  "metrics": [
+    "recall@1",
+    "recall@5",
+    "recall@10",
+    "recall@20",
+    "recall@50",
+    "precision@10",
+    "mrr@10",
+    "ndcg@10",
+    "map"
+  ],
+  "num_queries": 200,
+  "main_k": 10,
+  "aggregates": {
+    "dense": {
+      "recall@1": {
+        "mean": 0.025,
+        "ci_low": 0.005,
+        "ci_high": 0.05
+      },
+      "recall@5": {
+        "mean": 0.205,
+        "ci_low": 0.155,
+        "ci_high": 0.26
+      },
+      "recall@10": {
+        "mean": 0.34,
+        "ci_low": 0.275,
+        "ci_high": 0.41
+      },
+      "recall@20": {
+        "mean": 0.505,
+        "ci_low": 0.44,
+        "ci_high": 0.575
+      },
+      "recall@50": {
+        "mean": 0.605,
+        "ci_low": 0.54,
+        "ci_high": 0.675
+      },
+      "precision@10": {
+        "mean": 0.034,
+        "ci_low": 0.027500000000000004,
+        "ci_high": 0.040999999999999995
+      },
+      "mrr@10": {
+        "mean": 0.10800198412698413,
+        "ci_low": 0.08290243055555556,
+        "ci_high": 0.1380329365079365
+      },
+      "ndcg@10": {
+        "mean": 0.16217745842048178,
+        "ci_low": 0.1311821249490762,
+        "ci_high": 0.19787636468784203
+      },
+      "map": {
+        "mean": 0.12261823542322432,
+        "ci_low": 0.0989345100231813,
+        "ci_high": 0.15115145486614093
+      }
+    },
+    "hybrid": {
+      "recall@1": {
+        "mean": 0.065,
+        "ci_low": 0.035,
+        "ci_high": 0.1
+      },
+      "recall@5": {
+        "mean": 0.27,
+        "ci_low": 0.215,
+        "ci_high": 0.33
+      },
+      "recall@10": {
+        "mean": 0.44,
+        "ci_low": 0.38,
+        "ci_high": 0.51
+      },
+      "recall@20": {
+        "mean": 0.6,
+        "ci_low": 0.535,
+        "ci_high": 0.665
+      },
+      "recall@50": {
+        "mean": 0.78,
+        "ci_low": 0.72,
+        "ci_high": 0.84
+      },
+      "precision@10": {
+        "mean": 0.044000000000000004,
+        "ci_low": 0.038,
+        "ci_high": 0.051
+      },
+      "mrr@10": {
+        "mean": 0.16499404761904762,
+        "ci_low": 0.13225510912698413,
+        "ci_high": 0.20149246031746032
+      },
+      "ndcg@10": {
+        "mean": 0.22934230003852454,
+        "ci_low": 0.19274688039993038,
+        "ci_high": 0.2708011623477497
+      },
+      "map": {
+        "mean": 0.18244431882337458,
+        "ci_low": 0.15023280927704893,
+        "ci_high": 0.21748746580785258
+      }
+    },
+    "hybrid+graph": {
+      "recall@1": {
+        "mean": 0.05,
+        "ci_low": 0.025,
+        "ci_high": 0.08
+      },
+      "recall@5": {
+        "mean": 0.26,
+        "ci_low": 0.205,
+        "ci_high": 0.32
+      },
+      "recall@10": {
+        "mean": 0.44,
+        "ci_low": 0.38,
+        "ci_high": 0.51
+      },
+      "recall@20": {
+        "mean": 0.58,
+        "ci_low": 0.52,
+        "ci_high": 0.645
+      },
+      "recall@50": {
+        "mean": 0.74,
+        "ci_low": 0.68,
+        "ci_high": 0.8
+      },
+      "precision@10": {
+        "mean": 0.044000000000000004,
+        "ci_low": 0.038,
+        "ci_high": 0.051
+      },
+      "mrr@10": {
+        "mean": 0.1499186507936508,
+        "ci_low": 0.11839270833333335,
+        "ci_high": 0.181109375
+      },
+      "ndcg@10": {
+        "mean": 0.21727849626962317,
+        "ci_low": 0.18212578333371587,
+        "ci_high": 0.2546622785504251
+      },
+      "map": {
+        "mean": 0.16529479350797274,
+        "ci_low": 0.13466047248719848,
+        "ci_high": 0.19603468675789126
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "dense",
+      "candidate": "hybrid",
+      "deltas": {
+        "recall@1": {
+          "mean_delta": 0.04,
+          "ci_low": 0.01,
+          "ci_high": 0.075,
+          "p_value": 0.020921335337794014,
+          "n": 200
+        },
+        "recall@5": {
+          "mean_delta": 0.065,
+          "ci_low": 0.015,
+          "ci_high": 0.115,
+          "p_value": 0.019550269092885535,
+          "n": 200
+        },
+        "recall@10": {
+          "mean_delta": 0.1,
+          "ci_low": 0.055,
+          "ci_high": 0.145,
+          "p_value": 8.76994237559024e-05,
+          "n": 200
+        },
+        "recall@20": {
+          "mean_delta": 0.095,
+          "ci_low": 0.045,
+          "ci_high": 0.145,
+          "p_value": 0.0002556308678365145,
+          "n": 200
+        },
+        "recall@50": {
+          "mean_delta": 0.175,
+          "ci_low": 0.125,
+          "ci_high": 0.225,
+          "p_value": 3.297053268997287e-09,
+          "n": 200
+        },
+        "precision@10": {
+          "mean_delta": 0.010000000000000002,
+          "ci_low": 0.0055000000000000005,
+          "ci_high": 0.014500000000000002,
+          "p_value": 8.76994237559024e-05,
+          "n": 200
+        },
+        "mrr@10": {
+          "mean_delta": 0.0569920634920635,
+          "ci_low": 0.027673412698412704,
+          "ci_high": 0.08633392857142858,
+          "p_value": 6.510122418054326e-05,
+          "n": 200
+        },
+        "ndcg@10": {
+          "mean_delta": 0.06716484161804276,
+          "ci_low": 0.0392085761778592,
+          "ci_high": 0.09383413836238261,
+          "p_value": 6.069207401847073e-06,
+          "n": 200
+        },
+        "map": {
+          "mean_delta": 0.0598260834001503,
+          "ci_low": 0.03116218637454903,
+          "ci_high": 0.08759689772721851,
+          "p_value": 1.325749194576058e-07,
+          "n": 200
+        }
+      }
+    },
+    {
+      "baseline": "hybrid",
+      "candidate": "hybrid+graph",
+      "deltas": {
+        "recall@1": {
+          "mean_delta": -0.015,
+          "ci_low": -0.04,
+          "ci_high": 0.005,
+          "p_value": 0.17971249487899976,
+          "n": 200
+        },
+        "recall@5": {
+          "mean_delta": -0.01,
+          "ci_low": -0.03,
+          "ci_high": 0.01,
+          "p_value": 0.31731050786291415,
+          "n": 200
+        },
+        "recall@10": {
+          "mean_delta": 0.0,
+          "ci_low": -0.015,
+          "ci_high": 0.015,
+          "p_value": 1.0,
+          "n": 200
+        },
+        "recall@20": {
+          "mean_delta": -0.02,
+          "ci_low": -0.04,
+          "ci_high": -0.005,
+          "p_value": 0.04550026389635839,
+          "n": 200
+        },
+        "recall@50": {
+          "mean_delta": -0.04,
+          "ci_low": -0.07,
+          "ci_high": -0.015,
+          "p_value": 0.0046777349810472576,
+          "n": 200
+        },
+        "precision@10": {
+          "mean_delta": 0.0,
+          "ci_low": -0.0015000000000000002,
+          "ci_high": 0.0015000000000000002,
+          "p_value": 1.0,
+          "n": 200
+        },
+        "mrr@10": {
+          "mean_delta": -0.015075396825396825,
+          "ci_low": -0.030979315476190473,
+          "ci_high": 0.0011917162698412698,
+          "p_value": 3.894539294259486e-05,
+          "n": 200
+        },
+        "ndcg@10": {
+          "mean_delta": -0.012063803768901366,
+          "ci_low": -0.02488564992683962,
+          "ci_high": 0.0032732644583237194,
+          "p_value": 3.6270365212929556e-05,
+          "n": 200
+        },
+        "map": {
+          "mean_delta": -0.017149525315401867,
+          "ci_low": -0.03260815467211338,
+          "ci_high": -0.0014477976271562467,
+          "p_value": 1.3337934975165063e-11,
+          "n": 200
+        }
+      }
+    }
+  ],
+  "generated": "2026-06-26T21:34:20",
+  "mock": true,
+  "labels": "synthetic (one positive per query)",
+  "graph_fire_rate": 0.76,
+  "graph_fired": 152,
+  "determinism_config": {
+    "seed": 20240611,
+    "strict_deterministic": true,
+    "PYTHONHASHSEED": "20240611",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "numpy_version": "2.4.4",
+    "torch_configured": false,
+    "guarantees": {
+      "byte_identical_same_stack": "embeddings & exact (FAISS Flat) retrieval: yes. LLM greedy decode: only with batch-invariant kernels + fixed batch size.",
+      "byte_identical_cross_hardware": "no (float non-associativity across GPU arch / driver / library versions).",
+      "semantic_stability": "yes, and measured in 09_stability_harness.py."
+    },
+    "torch_version": null,
+    "cuda_available": false
+  }
+}

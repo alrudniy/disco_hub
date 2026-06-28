@@ -1,0 +1,34 @@
+# Discovery Hub pipeline dependencies.
+#
+# CORE (needed for the mock pipeline + CI; all pure-CPU and light):
+numpy>=1.26
+scipy>=1.11
+networkx>=3.0
+requests>=2.31
+
+# INDEX (Layer 2 serving; CPU build is fine on Drew):
+faiss-cpu>=1.7        # use faiss-gpu on Anvil for very large indexes
+
+# --------------------------------------------------------------------------- #
+# OPTIONAL -- real mode only. Install on the machine that runs that stage.
+# These are intentionally NOT imported at module load, so the pipeline runs
+# without them in mock mode.
+# --------------------------------------------------------------------------- #
+
+# Layer 2 embedding fine-tune + inference (Anvil for training, Drew for serving):
+# sentence-transformers>=3.0
+# torch>=2.2                         # match the CUDA on Anvil / Drew
+
+# Layer 1/2 R-GCN training (Anvil A100):
+# torch-geometric>=2.5              # RGCNConv + NeighborLoader
+#   (or)  dgl>=2.0
+
+# Layer 3 multi-agent RAG orchestration + serving (Drew):
+# langgraph>=0.2                    # stateful multi-agent graph
+# llama-index>=0.11                 # ingestion + retrieval + eval helpers
+# vllm>=0.6                         # OpenAI-compatible local LLM server
+# openai>=1.0                       # client for the vLLM server / API models
+# ragas>=0.2                        # faithfulness / citation metrics
+
+# Testing:
+pytest>=7.0

@@ -1,0 +1,185 @@
+{
+  "generated": "2026-06-27T01:02:40",
+  "mock": true,
+  "runs": 5,
+  "num_queries": 5,
+  "determinism_config": {
+    "seed": 20240611,
+    "strict_deterministic": true,
+    "PYTHONHASHSEED": "20240611",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "numpy_version": "2.4.4",
+    "torch_configured": false,
+    "guarantees": {
+      "byte_identical_same_stack": "embeddings & exact (FAISS Flat) retrieval: yes. LLM greedy decode: only with batch-invariant kernels + fixed batch size.",
+      "byte_identical_cross_hardware": "no (float non-associativity across GPU arch / driver / library versions).",
+      "semantic_stability": "yes, and measured in 09_stability_harness.py."
+    },
+    "torch_version": null,
+    "cuda_available": false
+  },
+  "embedding": {
+    "runs": 5,
+    "max_cosine_drift": 5.960464477539063e-08,
+    "exact_match_all_runs": true
+  },
+  "encoding_robustness": {
+    "reference": "full batch (size 5) on cpu",
+    "batch_sizes_tested": [
+      1,
+      8,
+      32
+    ],
+    "per_batch_size": [
+      {
+        "batch_size": 1,
+        "max_cosine_drift_vs_full": 5.960464477539063e-08,
+        "exact": true
+      },
+      {
+        "batch_size": 8,
+        "max_cosine_drift_vs_full": 5.960464477539063e-08,
+        "exact": true
+      },
+      {
+        "batch_size": 32,
+        "max_cosine_drift_vs_full": 5.960464477539063e-08,
+        "exact": true
+      }
+    ],
+    "max_drift_across_batch_sizes": 5.960464477539063e-08,
+    "batch_invariant": true,
+    "devices_tested": [
+      "cpu"
+    ],
+    "per_device": [
+      {
+        "device": "cpu",
+        "max_cosine_drift_vs_ref": 5.960464477539063e-08,
+        "exact": true
+      }
+    ],
+    "device_invariant": true,
+    "note": "mock is batch/device-invariant by construction (drift 0); in real mode nonzero drift here is expected and is the honest production signal that fixed-condition repeats hide."
+  },
+  "retrieval": {
+    "runs": 5,
+    "k": 10,
+    "per_query": [
+      {
+        "query": "EGFR inhibitor for non-small-cell lung cancer",
+        "mean_jaccard": 1.0,
+        "mean_kendall_tau": 0.9999999999999998,
+        "exact_order_match_rate": 1.0
+      },
+      {
+        "query": "GLP-1 receptor agonist for metabolic disease",
+        "mean_jaccard": 1.0,
+        "mean_kendall_tau": 0.9999999999999998,
+        "exact_order_match_rate": 1.0
+      },
+      {
+        "query": "monoclonal antibody targeting PD-L1",
+        "mean_jaccard": 1.0,
+        "mean_kendall_tau": 0.9999999999999998,
+        "exact_order_match_rate": 1.0
+      },
+      {
+        "query": "blood-brain-barrier penetrant for neurodegeneration",
+        "mean_jaccard": 1.0,
+        "mean_kendall_tau": 0.9999999999999998,
+        "exact_order_match_rate": 1.0
+      },
+      {
+        "query": "broad-spectrum antiviral protease inhibitor",
+        "mean_jaccard": 1.0,
+        "mean_kendall_tau": 0.9999999999999998,
+        "exact_order_match_rate": 1.0
+      }
+    ],
+    "mean_jaccard": 1.0,
+    "mean_kendall_tau": 0.9999999999999998,
+    "exact_order_match_rate": 1.0
+  },
+  "explanation": {
+    "runs": 5,
+    "per_query": [
+      {
+        "query": "EGFR inhibitor for non-small-cell lung cancer",
+        "answered": false,
+        "exact_match_rate": 1.0,
+        "mean_semantic_equivalence": 1.0,
+        "citation_set_jaccard": 1.0,
+        "faithfulness": {
+          "num_claims": 0,
+          "grounded_rate": 1.0,
+          "citation_validity_rate": 1.0,
+          "hallucination_rate": 0.0
+        }
+      },
+      {
+        "query": "GLP-1 receptor agonist for metabolic disease",
+        "answered": true,
+        "exact_match_rate": 1.0,
+        "mean_semantic_equivalence": 1.0,
+        "citation_set_jaccard": 1.0,
+        "faithfulness": {
+          "num_claims": 10,
+          "grounded_rate": 1.0,
+          "citation_validity_rate": 1.0,
+          "hallucination_rate": 0.0
+        }
+      },
+      {
+        "query": "monoclonal antibody targeting PD-L1",
+        "answered": false,
+        "exact_match_rate": 1.0,
+        "mean_semantic_equivalence": 1.0,
+        "citation_set_jaccard": 1.0,
+        "faithfulness": {
+          "num_claims": 0,
+          "grounded_rate": 1.0,
+          "citation_validity_rate": 1.0,
+          "hallucination_rate": 0.0
+        }
+      },
+      {
+        "query": "blood-brain-barrier penetrant for neurodegeneration",
+        "answered": false,
+        "exact_match_rate": 1.0,
+        "mean_semantic_equivalence": 1.0,
+        "citation_set_jaccard": 1.0,
+        "faithfulness": {
+          "num_claims": 0,
+          "grounded_rate": 1.0,
+          "citation_validity_rate": 1.0,
+          "hallucination_rate": 0.0
+        }
+      },
+      {
+        "query": "broad-spectrum antiviral protease inhibitor",
+        "answered": false,
+        "exact_match_rate": 1.0,
+        "mean_semantic_equivalence": 1.0,
+        "citation_set_jaccard": 1.0,
+        "faithfulness": {
+          "num_claims": 0,
+          "grounded_rate": 1.0,
+          "citation_validity_rate": 1.0,
+          "hallucination_rate": 0.0
+        }
+      }
+    ],
+    "exact_match_rate": 1.0,
+    "mean_semantic_equivalence": 1.0,
+    "citation_set_jaccard": 1.0,
+    "answered_queries": 1,
+    "refusal_rate": 0.8,
+    "faithfulness": {
+      "scored_over_answered_queries": 1,
+      "mean_grounded_rate": 1.0,
+      "mean_citation_validity_rate": 1.0,
+      "mean_hallucination_rate": 0.0
+    }
+  }
+}

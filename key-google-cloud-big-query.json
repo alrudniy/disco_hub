@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "summer-dssi",
+  "private_key_id": "91688fe5d2b53609008791d746acbc080d523644",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDdoVpzF28KBIgt\npjLuSJJNTWAI1CWpaS9vbRWIA9rjpAu6EesmACNwcLqGwHy066PoT/8wNYnlR1/W\nyBfHQRQXReVPDZJfjGJ+q6/0blXHRgCIEg0LEeVyGo2svC4+RppjZIbVuX+d7kyI\nBXGK908vk4lXxg9CI6W+G+JfD+TNuKUikPNHCRwmMyfyFiaQyQwG6ynWuVV0MrOZ\ngX5iG1txBeWxABkusrIa5Y+lQ9VH8a5YQjgejTw7LuDeDRZJkkBKL5smiPUcd3by\nfFyFCBm3NSA+T5WoSaPbosuLqt7PdA7mQ/PUr61bUGAU8nT6DyDWJLmeAyOqJB4+\nXzG0IpRtAgMBAAECggEAML9/1JbP7qUmitvmkfDWdThSqj53djbTny+gL8WhTLbV\neXzdewNGyEGTVXZbN7Qo3j1SRPlRtmOnmedzC3muAJx4HpY+ntOTCoea8SmfpnAo\nR8Wopsmt7RYYGWlexoXjCX+gBLyDbGpw3O5NliJlgXJzICJJUuPiXdlmRkCJtBHD\nOwcOBO2CYEC/9VVzNGinGF+wdhsOV9+DG2ty+V/bcT1urccIQVOl4VZU1ncCX43Y\nvq7BjxlCNqsAHuavGKZ+vw0nVqcNW0Tb8ZAA0B1NuL0xkPEX+FTIbxbkPNX7FSZU\nX1pOGeN9R9DomBgdxNOauMUbFmwamv6Mq+pctkfW4QKBgQDyuiP+PNKTs2mTeRRm\n732WPGcqqHzxo3SaWijHro8aLEO74+lXtUDUZ1j5+zTlKYBbTHr81ojFMHjALFUG\ndR2Klk9OWbsbmI9cUUheLN23yubBjx98XTUhzixfpCDDsCfjMdJvgwdV3Q/n79oq\ndt2vbmT0TxPg+TaG2aFiCdwPhQKBgQDpv+KO7KJqTB+Mg9m6Mr7sCClx9mQ71yyL\nPtbi6Ec1y1u2IZe5GnhKjFnFsGIkn4NhWcAWijouaF688S0mGBcqI/l5yaddeo+6\n5lK6ab7DokTqoAJ+mjhHhTCanb7sabyztgecODKziLn4lHftXbbk7Df30viwsLrg\ndvY9MWVhyQKBgQDCap/bysHsNj9xNQFHdbpE9Lq5q1zwezkxTNfvIP1UPHJAc8v6\nSZ7Uwra8/B4hE73Q4xB7pibEsw909c1gr7vqvnxlSHAbKXZivmRVsmAhD68HCGly\nxoGBQ0+9h4wK0fURAF4KnYvplXhhEXfQnYbxNl48ZX6Jq3OmTXj7OuR9tQKBgQC0\nlajrcEd9xbet8AMaha/YW+nhAFCppm/kV7Td8kNpfOUqjUNRHvEF7u4/+yenUZDH\nefYbs8iFJ97hK5YM0xm6Vbab7z2cy14VL3GEUMOvEkMZ3Gpw8qY+ItjM6segj4PY\ndu3kM8p/x0adk94fBIKS0yfeDyBQKQkG9wD/f5TqeQKBgBlnNMs/Ft1dkOh1YPnA\nL8H/F50SJMxzkDcB+6Lh25O/EfDB7AOUeU9RQaJIxRMDK76km9IK6Zo6XDaYcZe9\n2BlMb4lB+HiiF0Jk96Ut/kt/yRwbt0TENBjTDC3jHsi5DirtQAA2tvMnfsZLEofN\n7PGEcznbF1gTRxGOYdu1HGFv\n-----END PRIVATE KEY-----\n",
+  "client_email": "discovery-hub-bq@summer-dssi.iam.gserviceaccount.com",
+  "client_id": "113879671550808761649",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/discovery-hub-bq%40summer-dssi.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

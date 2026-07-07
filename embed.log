@@ -17,3 +17,4 @@ Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF
   [cuda:1] shard    4 (20000 docs) 314.5s
   [cuda:0] shard    5 (20000 docs) 320.4s
   [cuda:1] shard    6 (20000 docs) 320.7s
+  [cuda:0] shard    7 (20000 docs) 449.2s

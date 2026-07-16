@@ -38,14 +38,29 @@ from discovery_hub.determinism import set_global_determinism  # noqa: E402
 # a prediction, next to whatever actually happened, never asserted as the outcome.
 SCRIPT = [
     {
-        "title": "1. THE HIT",
-        "query": "monoclonal antibody targeting PD-L1 for oncology",
-        "note": ("Spec predicts US6803192B1 'B7-H1, a novel immunoregulatory molecule' "
-                 "surfaces -- B7-H1 is the older name for PD-L1, which no keyword "
-                 "search finds. Watch the ABSTENTIONS: no org is named, so "
-                 "expertise-gap should decline, and nothing clinical is claimed, so "
-                 "policy should decline. Two agents declining is the design working, "
-                 "not the demo failing."),
+        "title": "1. THE HIT THAT ISN'T (the reranker eats the bridge)",
+        "query": "HER2 targeted therapy for breast cancer",
+        "note": ("The spec's version of this slide claims retrieval surfaces a "
+                 "document no keyword search could find. It does not, and the "
+                 "reason is the most useful thing in this demo. "
+                 "THE DENSE ENCODER GENUINELY BRIDGES NOMENCLATURE: 253 documents "
+                 "here say 'ErbB2' and never 'HER2' (any spelling), and dense cosine "
+                 "puts uspto:US11903948B2 'Anti-ErbB2 antibody-drug conjugate' at "
+                 "rank 9 of 603,369 -- ErbB2 shares no characters with HER2, so that "
+                 "is real synonym knowledge, and a HER2 keyword search returns none "
+                 "of those 253. THEN THE CROSS-ENCODER UNDOES IT: of the 50 "
+                 "candidates reranked for this query, the 45 that literally contain "
+                 "'HER2' take positions 1-45 and the 5 that do not take positions "
+                 "46,47,48,49,50 -- exactly the last five. That ErbB2 patent lands "
+                 "49th. The reranked top-10 is 100% literal-HER2. So the pipeline's "
+                 "FINAL stage, whose score this system reports as confidence, ranks "
+                 "like the keyword search the pitch says it beats. "
+                 "Watch the ABSTENTIONS too -- no org is named, nothing clinical is "
+                 "claimed, so two agents decline. That part is the design working. "
+                 "(The spec's original query, 'monoclonal antibody targeting PD-L1' "
+                 "expecting US6803192B1 'B7-H1', fails harder: rank 7,585, cosine "
+                 "0.234 -- no bridge at all. Chosen by sweeping 28 synonym pairs "
+                 "under a separator-blind control; see README section 4.)"),
     },
     {
         "title": "2. THE DIFFERENTIATOR",

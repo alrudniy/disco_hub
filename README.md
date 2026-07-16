@@ -167,15 +167,58 @@ graph path to whoever does:
 | `US11547739B2` Peptides related to ICOS signaling | La Jolla Institute — Crotty Shane, Altman Amnon |
 | `US10716838B2` Anti-CD277 antibodies | INSERM / CNRS / Univ Aix Marseille |
 
+### The reranker eats the semantic bridge (the most useful result here)
+
+The pitch's core claim is that this finds what a keyword search cannot. Measured, on the
+real corpus, the dense encoder **does** — and the cross-encoder then **throws it away**.
+
+Query: `HER2 targeted therapy for breast cancer`. 253 documents in the corpus say "ErbB2"
+and never "HER2" in any spelling; a HER2 keyword search cannot return one of them. Dense
+cosine ranks `uspto:US11903948B2` "Anti-ErbB2 antibody-drug conjugate" **9th of 603,369**
+(0.561). `her2` and `erbb2` share no characters — that is real synonym knowledge.
+
+Then the BGE cross-encoder reranks the 50-candidate pool:
+
+| of the 50 reranked candidates | count | positions after rerank |
+|---|---:|---|
+| literally contain "HER2" | 45 | 1–45 |
+| do **not** (the bridged docs) | 5 | **46, 47, 48, 49, 50** |
+
+Exactly the last five. The ErbB2 patent lands **49th**. The reranked top-10 is **100%**
+literal-HER2. **The pipeline's final ranking stage — whose score this system reports as
+its confidence — orders like the keyword search the pitch says it beats.**
+
+This is not a tuning problem, it is a locating one: the register-gap failure
+`pipeline_3`'s handoff attributes to fine-tuning is *also* present, undiluted, in the
+off-the-shelf reranker that runs after it. Any claim about crossing nomenclature has to
+survive `_rerank()`, and today nothing does. Cheapest next probe: re-run stage 10 with
+reranking disabled and compare — if dense-only recall beats retrieve-then-rerank on
+cross-register queries, the reranker is a liability on exactly the queries this product
+exists for.
+
 ### Two things the spec promised that did NOT happen
 
 **The hit does not hit.** Spec §5 says retrieval surfaces `US6803192B1` ("B7-H1, a novel
 immunoregulatory molecule") because B7-H1 is the older name for PD-L1, and that "no keyword
 search finds this". The document IS in the corpus and IS in the graph. **It ranks 7,585 of
 603,369**, dense cosine **0.2342**, against a top-10 at ~0.60. The encoder does not bridge the
-B7-H1 → PD-L1 synonym; it scores them as near-unrelated. The demo prints what actually
-surfaced. Do not tell this story in a room until the rank changes — it is checkable in ten
-minutes by anyone who asks.
+B7-H1 → PD-L1 synonym at all; it scores them as near-unrelated. Do not tell this story in a
+room — it is checkable in ten minutes by anyone who asks.
+
+That is not one unlucky pair. Sweeping **28 synonym pairs**, each controlled so the queried
+term is absent from the candidate documents in *every* spelling (so a keyword search provably
+cannot return them), only **HER2/ErbB2** put a bridged document in the dense top-10. Arbitrary
+identifiers fail completely: `Opdivo` 56,968 · `Ozempic` 137,871 · `CD274` **287,301** of
+603,369. The encoder bridges names that share morphology or descriptive structure
+(`acetylsalicylic acid`→aspirin, `HMG-CoA reductase inhibitor`→statin, `ErbB2`→HER2) and is
+blind to codes. And the one bridge that works is then destroyed by the reranker, above.
+
+A caution about method, because it nearly went the other way: the first pass of that sweep
+used a plain substring exclusion and reported PD-1/CD279 at rank 3 and B7-H3/CD276 at rank 17
+as bridges. Both were lexical leaks — the documents spell the modern term without a hyphen
+("Anti-**PD1** antibodies", "Anti-CD276 antibodies **(B7H3)**"). Under a separator-blind
+control they collapse to **2,434** and **5,466**. A synonym experiment that does not normalize
+punctuation measures its own tokenizer.
 
 **The money shot's cast is different.** Spec §5 predicts Chen Lieping's patents, assigned to
 Mayo/Yale, as the fillers. The real fillers are Louisville, La Jolla and INSERM (above). Chen

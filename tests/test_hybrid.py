@@ -67,6 +67,8 @@ def _nodes():
         {"node_id": "organization:stanford", "ntype": "organization", "label": "Stanford"},
         {"node_id": "organization:pfizer", "ntype": "organization", "label": "Pfizer"},
         {"node_id": "organization:eli lilly", "ntype": "organization", "label": "Eli Lilly"},
+        {"node_id": "organization:genentech inc", "ntype": "organization",
+         "label": "Genentech Inc"},
         {"node_id": "facility:pfizer medical center", "ntype": "facility",
          "label": "Pfizer Medical Center"},
         {"node_id": "technology:uspto:US1", "ntype": "technology",
@@ -80,10 +82,28 @@ def test_link_single_token_org():
         ["organization:stanford"]
 
 
-def test_link_unique_alias_for_multiword_org():
+def test_link_alias_only_when_token_is_the_whole_name():
     idx = build_surface_index(_nodes())
-    # "lilly" is a unique non-stopword token of "Eli Lilly" -> aliases to it
-    assert link_query("a lilly compound for oncology", idx) == ["organization:eli lilly"]
+    # "Genentech Inc" is one name plus a legal suffix, so "genentech" IS the entity
+    # and may alias it.
+    assert link_query("a genentech antibody", idx) == ["organization:genentech inc"]
+
+
+def test_link_does_not_alias_a_fragment_of_a_multiword_name():
+    idx = build_surface_index(_nodes())
+    # This test previously asserted the OPPOSITE -- that "lilly" aliases "Eli Lilly"
+    # because it is a globally-unique non-stopword token. That rule was refuted on
+    # this graph: uniqueness promotes junk by construction, because in ~926k surfaces
+    # a distinctive name is often SHARED while an odd word appears exactly once. It
+    # is what made "Oral tablet formulation for CML" link to the real node
+    # organization:hot album tansansen tablet inc. See build_surface_index's docstring.
+    #
+    # Losing "lilly" is the known, deliberate cost of the fix: "Eli Lilly" is two
+    # tokens with no legal suffix, so neither word aliases it. That is the
+    # precision-over-recall trade the module always claimed to make -- the old
+    # mechanism just delivered the reverse. The full surface still links.
+    assert link_query("a lilly compound for oncology", idx) == []
+    assert link_query("an eli lilly compound", idx) == ["organization:eli lilly"]
 
 
 def test_link_greedy_longest_match_prefers_full_phrase():

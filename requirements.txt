@@ -6,6 +6,12 @@ scipy>=1.11
 networkx>=3.0
 requests>=2.31
 awscli
+# entity_link.build_surface_index() uses zipf_frequency to reject aliases that are
+# ordinary English words ("base" from "BASE SE", "technology" from "TECHNOLOGY
+# HOLDING LLC"). NOT optional despite the lazy import: 07's Retriever links every
+# query, so a missing wordfreq is an ImportError on the serving path, not a
+# degraded mode. Pass max_alias_zipf=None to opt out deliberately.
+wordfreq>=3.0
 
 # INDEX (Layer 2 serving; CPU build is fine on Drew):
 faiss-cpu>=1.7        # use faiss-gpu on Anvil for very large indexes

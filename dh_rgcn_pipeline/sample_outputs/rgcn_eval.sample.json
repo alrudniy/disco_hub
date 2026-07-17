@@ -1,0 +1,10 @@
+{
+  "num_eval": 3860,
+  "roc_auc": 0.5264333270691831,
+  "hits@10": 0.2914507772020725,
+  "mrr": 0.09260387686687944,
+  "ranking_negatives": 50,
+  "mock": true,
+  "num_nodes": 13034,
+  "num_edges": 38606
+}

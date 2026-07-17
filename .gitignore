@@ -1,0 +1,19 @@
+# Never in git.
+venv/
+env/
+.venv*/
+__pycache__/
+*.py[cod]
+data/
+models/
+*.npy
+*.faiss
+# Secrets. dh_rgcn_pipeline/key-google-cloud-big-query.json is a LIVE GCP
+# service-account key (project summer-dssi) that exists on the vast box and is
+# committed in the root commit of discovery_hub_pipeline. It was excluded from
+# this snapshot at the rsync level and verified absent before commit. Keep it out.
+.env
+*key*.json
+*.pem
+id_rsa*
+*token*

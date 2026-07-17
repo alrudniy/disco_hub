@@ -1,0 +1,17 @@
+# Python virtual environment
+venv/
+env/
+
+# Mac OS hidden files
+.DS_Store
+
+# Environment variables (secrets)
+.env
+
+# Editor and IDE directories
+.vscode/
+.idea/
+
+# Python cache files
+__pycache__/
+*.py[cod]

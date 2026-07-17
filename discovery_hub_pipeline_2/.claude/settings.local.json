@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 tests/test_dh2_smoke.py)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(python3 tests/test_losses_bugfix.py)",
+      "Bash(python3 tests/test_07_cascade_flags.py)"
+    ]
+  }
+}

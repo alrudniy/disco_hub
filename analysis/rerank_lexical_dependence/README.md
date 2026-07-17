@@ -15,7 +15,8 @@ max_seq_length=512. top_k=50, rerank_k=50.
 | `t4_causal.py` / `t4.log` | T4 single-term causal probe, both directions. |
 | `bridge_hunt.py` / `bridge_hunt2.log` | the 28-pair synonym sweep, separator-blind control. |
 | `diag_gap.py` | the B7 ownership-vs-cosine measurement that demoted the gap threshold. |
-| `demo_h200.log` / `demo_v3.log` | full demo runs, LLM live. |
+| `t4c_dose.py` / `t4c.log` | T4c dose-response: z(k) over k=0..6 HER2 mentions, first-k and last-k. |
+| `demo_h200.log` / `demo_v3.log` / `dryrun.log` | full demo runs, LLM live. dryrun.log is the pre-demo dry run (peak RSS 21.69 GB). |
 
 ## What is settled
 
@@ -36,12 +37,30 @@ length confound at the partition (bridged median 201 tok vs literal 213, inside
 the literal range -- though spearman(n_tok, z)=+0.55 overall, so length is not
 inert generally) * swallowed exceptions (no try/except in 07's scoring path).
 
-## Open
+## T4c: it is a PRESENCE CLIFF, and dose does NOT explain the asymmetry
 
-Whether the shape is DOSE-SATURATING (the rank-1 doc carried 6 HER2 mentions, the
-bridge 1 -- so per-mention saturation could reconcile -5.47 and +1.76 with no
-context term at all) or a genuine CONTEXT INTERACTION. T4c is the dose-response
-probe that separates them. Until it runs, claim only what survives both shapes:
+z(k), replacing k of the rank-1 doc's 6 HER2 mentions with ErbB2:
+
+    k         0       1       2       3       4       5       6
+    z    +0.531  +0.128  -0.323  +0.021  -0.476  -1.271  -4.941
+    marg     --   -0.40   -0.45   +0.34   -0.50   -0.79   -3.67
+
+Removing FIVE of six mentions costs -1.80 logits. Removing the SIXTH costs -3.67
+-- 67% of the whole effect sits on the last one. Same shape in last-k order
+(final marginal -4.23). The curve is not even monotone (k=3 is +0.34).
+
+So the effect is not count, it is PRESENCE: while any HER2 token survives the
+score stays within ~1.8 logits of baseline; when the last one goes it falls off a
+cliff. None of the three pre-registered branches fit -- it is neither
+dose-saturating (z(1)-z(0) is -0.40, not -1.76) nor linear-additive (marginals
+range -3.67..+0.34) nor a first-mention effect.
+
+And the cliff HEIGHT is context-dependent: the 1->0 transition costs -3.67 in the
+rank-1 doc but the 0->1 transition buys only +1.76 in the bridge doc, 2.1x apart.
+Dose does not reconcile them. A context term survives, now localised to the
+presence transition rather than smeared across the count.
+
+The wording holds unchanged, which is why it was chosen before the run:
 
 > the reranker carries a lexical dependence large enough, on this query, to bury
 > a semantically identical document 37 places.

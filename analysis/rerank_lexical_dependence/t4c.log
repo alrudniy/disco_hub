@@ -1,0 +1,55 @@
+[32mActivated conda/uv virtual environment at [36m/venv/main[0m
+building retriever ...
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 7814.53it/s]
+/workspace/dh_multiagent/discovery_hub/embedding.py:133: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.model.get_sentence_embedding_dimension()
+[07] dh2.validate unavailable; skipping startup compat check (PYTHONPATH should include the pipeline tree)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 8262.13it/s]
+
+uspto:US12227591B2: 6 HER2 occurrences
+  #1  pos   37  'HER2'   ...igen-binding constructs targeting HER2 / Described herein are high affinit...
+  #2  pos  154  'HER2'   ...s, directed to the ECD2 domain of HER2. The antigen-binding constructs c...
+  #3  pos  273  'HER2'   ...e construct that binds to ECD2 of HER2 (HER2 ECD2) with increased affini...
+  #4  pos  279  'HER2'   ...truct that binds to ECD2 of HER2 (HER2 ECD2) with increased affinity com...
+  #5  pos  698  'HER2'   ...structs can inhibit the growth of HER2-expressing breast cancer cells an...
+  #6  pos  829  'HER2'   ...atopic format are internalized in HER2-expressing cells. / Keywords: A61P / ...
+
+================================================================================================
+T4c  DOSE CURVE   z(k), replacing the FIRST k of 6 HER2 mentions with ErbB2
+================================================================================================
+ k  n_tok                  score         z  dz vs k=0  marginal
+ 0    319     0.6295958161354065   +0.5305    +0.0000          
+ 1    321     0.5319332480430603   +0.1279    -0.4026   -0.4026
+ 2    323     0.4200134575366974   -0.3227    -0.8532   -0.4506
+ 3    325     0.5053548216819763   +0.0214    -0.5091   +0.3441
+ 4    327    0.38310012221336365   -0.4764    -1.0069   -0.4978
+ 5    329    0.21914920210838318   -1.2706    -1.8011   -0.7942
+ 6    331   0.007099485956132412   -4.9406    -5.4711   -3.6700
+
+------------------------------------------------------------------------------------------------
+LAST-k order (separates dose from position; occurrence 1 is the title)
+------------------------------------------------------------------------------------------------
+ k         z  dz vs k=0  marginal
+ 0   +0.5305    +0.0000          
+ 1   +0.3785    -0.1520   -0.1520
+ 2   -0.0741    -0.6045   -0.4526
+ 3   +0.0193    -0.5112   +0.0933
+ 4   -0.3399    -0.8704   -0.3592
+ 5   -0.7059    -1.2364   -0.3660
+ 6   -4.9406    -5.4711   -4.2347
+
+================================================================================================
+T4c ANSWERS  (pre-registered criterion)
+================================================================================================
+  z(0)                      : +0.5305
+  z(1) - z(0)  [first-k]    : -0.4026   <- compare to the bridge's +1.7618
+  z(1) - z(0)  [last-k]     : -0.1520
+  z(6) - z(0)               : -5.4711   (T4(b) full swap was -5.4711)
+  mean marginal per mention : -0.9118
+  marginals (first-k)       : [-0.403, -0.451, 0.344, -0.498, -0.794, -3.67]
+  |first marginal| / |mean| : 0.44x  (1.0 = perfectly linear/additive; >1 = front-loaded/saturating)
+  title occurrence dominant?: first-k dz(1)=-0.4026 vs last-k dz(1)=-0.1520
+
+  boundary to beat          : 0.8951 logits
+  does ONE mention clear it?: first-k False   last-k False

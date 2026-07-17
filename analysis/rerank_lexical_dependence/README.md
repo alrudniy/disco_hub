@@ -37,7 +37,7 @@ length confound at the partition (bridged median 201 tok vs literal 213, inside
 the literal range -- though spearman(n_tok, z)=+0.55 overall, so length is not
 inert generally) * swallowed exceptions (no try/except in 07's scoring path).
 
-## T4c: it is a PRESENCE CLIFF, and dose does NOT explain the asymmetry
+## T4c: PRESENCE DOMINATES COUNT ~2:1, and dose does NOT explain the asymmetry
 
 z(k), replacing k of the rank-1 doc's 6 HER2 mentions with ErbB2:
 
@@ -46,19 +46,25 @@ z(k), replacing k of the rank-1 doc's 6 HER2 mentions with ErbB2:
     marg     --   -0.40   -0.45   +0.34   -0.50   -0.79   -3.67
 
 Removing FIVE of six mentions costs -1.80 logits. Removing the SIXTH costs -3.67
--- 67% of the whole effect sits on the last one. Same shape in last-k order
-(final marginal -4.23). The curve is not even monotone (k=3 is +0.34).
+-- so the last-token transition is worth ~2x the other five put together. Same
+shape in last-k order (final marginal -4.23).
 
-So the effect is not count, it is PRESENCE: while any HER2 token survives the
-score stays within ~1.8 logits of baseline; when the last one goes it falls off a
-cliff. None of the three pre-registered branches fit -- it is neither
-dose-saturating (z(1)-z(0) is -0.40, not -1.76) nor linear-additive (marginals
-range -3.67..+0.34) nor a first-mention effect.
+PRESENCE DOMINATES COUNT ~2:1. Not "presence, not count" -- that was an
+overclaim, and two numbers here refute it. The count component is -1.80, which is
+2x the 0.8951 boundary: on its own it would still be a large effect, so count is
+not negligible, it is merely the smaller half. And the curve is not monotone
+(k=3 is +0.34), which at n=1 means the per-step structure is noise-limited and
+the marginals should not be read individually at all. What survives is the ratio
+of the two halves, not the shape of either.
 
-And the cliff HEIGHT is context-dependent: the 1->0 transition costs -3.67 in the
-rank-1 doc but the 0->1 transition buys only +1.76 in the bridge doc, 2.1x apart.
-Dose does not reconcile them. A context term survives, now localised to the
-presence transition rather than smeared across the count.
+None of the three pre-registered branches fit: not dose-saturating (z(1)-z(0) is
+-0.40, not -1.76), not linear-additive (marginals range -3.67..+0.34), not a
+first-mention effect (the cliff is the LAST removal).
+
+And the last-token transition's HEIGHT is context-dependent: 1->0 costs -3.67 in
+the rank-1 doc but 0->1 buys only +1.76 in the bridge doc, 2.1x apart on the same
+transition. Dose does not reconcile them. A context term survives, now localised
+to the presence transition rather than smeared across the count.
 
 The wording holds unchanged, which is why it was chosen before the run:
 
@@ -78,3 +84,64 @@ first T1 write-up characterised the partition in SIGMOID space, where the
 boundary looked like an unremarkable 3.7x-median tail; in logit space it is the
 2nd-largest gap of 49. Both errors pointed the same way: toward a more flattering
 story. Measure in the model's own space, and normalise punctuation.
+
+---
+
+## V1: query 2's verifier flip is NOT a fabricated abstention
+
+The risk: "verifier fail 0.00" might be an empty/unparseable LLM response defaulting
+to 0.00 -- a crash wearing a verdict's clothes, on the one query whose story is
+"declines instead of confabulating". This codebase already shipped that bug's mirror
+image once (reasoning tokens ate max_tokens, content came back "", empty was treated
+as an answer). Three candidates: H1 tiny denominator, H2 verifier non-determinism,
+H3 empty-defaults-to-zero.
+
+**H3 is structurally impossible for the observed cell.** The only 0.0 fallback is
+
+    confidence = len(supported) / len(claims) if claims else 0.0     verifier.py:171
+
+and `claims == []` forces `unsupported == []` and `contradicted == []`, hence
+`passed = True`, hence verdict **"pass"** (verifier.py:154-156, 161). So a 0.00 from
+the fallback ALWAYS carries verdict=pass. The observed cell was **fail 0.00**, which
+is only reachable via `len(supported)/len(claims)` with supported=0 and claims>=1.
+It was a computed verdict, not a default.
+
+An empty or unparseable response does not reach that line at all: `_verify` sees
+`raw is None`, falls back to the lexical check, and labels it
+`mode="deterministic"` + `caveat="LLM was configured but returned no usable
+verdict"` (verifier.py:197, 210-217). An exception unwinds through `@timed` to
+(ok=False, error=...), which is distinguishable from a gate-fail (ok=False,
+error=None) by construction (verifier.py:175-181).
+
+**And it did not fire.** 10 live LLM verifier calls, 0 empty, 0 unparseable, 0
+deterministic fallbacks.
+
+V1b -- 5 orchestrator runs, query 2, LLM live:
+
+    run  draft_sha1     chars  num  den  score  verdict  mode  raw_empty  raw_len
+      1  b398eea45331    1353    9    9   1.00     pass   llm      False     1954
+      2  b398eea45331    1353    9    9   1.00     pass   llm      False     1954
+      3  67dcd6d33bc3    1545   10   10   1.00     pass   llm      False     2207
+      4  67dcd6d33bc3    1545   10   10   1.00     pass   llm      False     2207
+      5  b398eea45331    1353    9    9   1.00     pass   llm      False     1954
+
+V1c -- ONE captured draft, re-verified 5x on FIXED input: scores [1.0]*5, verdicts
+all pass, denominators [9,9,9,9,9], and the raw response byte-identical all five
+times. **The verifier is stable on fixed input: H2 refuted.** Drafts varied (2
+distinct sha1 in 5 runs): the variance is UPSTREAM, in synthesis. H1.
+
+**What V1 did NOT establish.** The fail did not reproduce in 5 runs, so its raw
+response was never captured. That the original failing run had **denominator 1** is
+an INFERENCE from the logged numbers, not a measurement: the demo printed
+unsupported_count=1, contradicted_count=0 and confidence 0.00; statuses are exactly
+("supported","contradicted","unsupported") (verifier.py:61); so supported=0 and
+claims = 0+1+0 = 1. Every run tonight extracted 9-10 claims, so whatever produced a
+1-claim draft is not reproduced here and is not characterised.
+
+With denominator 1, 0.00 and 1.00 are the only attainable scores -- "flaky" is the
+wrong word for a two-valued statistic. The suspicious cell (0.00 with denominator
+>= 2) was not observed.
+
+Nothing was fixed. The pre-authorized fix (distinguish FAILED-TO-VERIFY from
+VERIFIED-UNSUPPORTED) did not trigger, because that distinction already exists and
+is already labelled.

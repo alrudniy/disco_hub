@@ -1,0 +1,24 @@
+# pipeline_2 additional deps (on top of the base discovery_hub requirements).
+# Pinned loosely; the H100 image usually has torch already.
+torch>=2.1
+transformers>=4.44
+sentence-transformers>=3.0
+peft>=0.11
+safetensors>=0.4
+accelerate>=0.30
+faiss-cpu>=1.8
+numpy>=1.24
+requests>=2.31
+
+# --- Register-Aware Semantic Cascade (RASC) ---------------------------------
+# vLLM: required ONLY for the GroupRank-32B final pass (dh2/grouprank.py), which is
+# feature-flagged OFF by default. The union + Qwen rerank path does not need it.
+# Pin >=0.6 for the chat-template + tensor-parallel behavior grouprank.py relies on.
+# DISABLED for this RASC eval run (C0,C1,C2 only; C3/GroupRank gated off). vLLM would
+# reinstall/conflict with the box's working torch for no benefit. Re-enable only for C3.
+# vllm>=0.6 ; python_version >= "3.9"
+# flash-attn: an OPTIMIZATION for QwenTeacher at 8K context, not a correctness
+# requirement -- teachers.py warns and falls back to default attention if it is absent,
+# so a box without it produces identical scores, just slower. It needs a CUDA toolchain
+# and can take ~20 min to build from source; install it deliberately, not by accident.
+# flash-attn>=2.5

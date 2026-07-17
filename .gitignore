@@ -1,0 +1,21 @@
+# Virtualenvs -- .venv_preflight was 90 MB of numpy/scipy binaries in this tree.
+venv/
+env/
+.venv*/
+# Python caches
+__pycache__/
+*.py[cod]
+# Secrets. A GCP service-account key (project summer-dssi) is committed in the
+# ROOT COMMIT of discovery_hub_pipeline and is present on this box in
+# dh_rgcn_pipeline/. It is not in THIS tree and must never enter it.
+.env
+*key*.json
+!package-lock.json
+*.pem
+id_rsa*
+*token*
+# Data / models -- never in git.
+data/
+models/
+*.npy
+*.faiss

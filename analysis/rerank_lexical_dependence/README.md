@@ -96,22 +96,36 @@ image once (reasoning tokens ate max_tokens, content came back "", empty was tre
 as an answer). Three candidates: H1 tiny denominator, H2 verifier non-determinism,
 H3 empty-defaults-to-zero.
 
-**H3 is structurally impossible for the observed cell.** The only 0.0 fallback is
+**EVERY CRASH PATH IS LABELLED, so a crash cannot silently wear a verdict's
+clothes.** That is what V1 establishes, and it holds regardless of what the failing
+run did.
+
+An earlier draft of this section claimed something stronger and did not earn it:
+that fail+0.00 was structurally UNREACHABLE from the empty/unparseable path. It is
+reachable. `_verify` routes an empty or unparseable response to
+`_deterministic_claims` and returns `(claims, "deterministic", notes)`
+(verifier.py:210-217); `run()` has exactly ONE AgentResult return, so BOTH modes
+compute confidence through the same line:
 
     confidence = len(supported) / len(claims) if claims else 0.0     verifier.py:171
 
-and `claims == []` forces `unsupported == []` and `contradicted == []`, hence
-`passed = True`, hence verdict **"pass"** (verifier.py:154-156, 161). So a 0.00 from
-the fallback ALWAYS carries verdict=pass. The observed cell was **fail 0.00**, which
-is only reachable via `len(supported)/len(claims)` with supported=0 and claims>=1.
-It was a computed verdict, not a default.
+so 0 supported of 1 deterministic claim IS 0.00 + fail. The `else 0.0` branch does
+carry verdict=pass (claims == [] forces passed=True, verifier.py:154-156, 161), but
+that only rules out the EMPTY-CLAIMS default -- not the fallback.
 
-An empty or unparseable response does not reach that line at all: `_verify` sees
-`raw is None`, falls back to the lexical check, and labels it
-`mode="deterministic"` + `caveat="LLM was configured but returned no usable
-verdict"` (verifier.py:197, 210-217). An exception unwinds through `@timed` to
-(ok=False, error=...), which is distinguishable from a gate-fail (ok=False,
-error=None) by construction (verifier.py:175-181).
+What actually rules out an unlabelled crash is the labelling, not the structure:
+
+  * empty / unparseable -> mode="deterministic" + caveat="LLM was configured but
+    returned no usable verdict; fell back to the weaker lexical check"
+    (verifier.py:197, 210-217). A real lexical verdict, honestly named.
+  * exception -> unwinds through @timed to (ok=False, error=...), distinguishable
+    from a gate-fail (ok=False, error=None) by construction (verifier.py:175-181).
+
+So the fallback firing would still be an honest abstention with a real (weaker)
+verdict behind it. What it would NOT be is well-explained on screen: the decline
+reason would read "1 claim(s) not supported" when the truer reason is "the LLM
+returned no usable verdict, so a weaker check ran". The payload knows; the screen
+does not print `mode`.
 
 **And it did not fire.** 10 live LLM verifier calls, 0 empty, 0 unparseable, 0
 deterministic fallbacks.
@@ -130,13 +144,30 @@ all pass, denominators [9,9,9,9,9], and the raw response byte-identical all five
 times. **The verifier is stable on fixed input: H2 refuted.** Drafts varied (2
 distinct sha1 in 5 runs): the variance is UPSTREAM, in synthesis. H1.
 
-**What V1 did NOT establish.** The fail did not reproduce in 5 runs, so its raw
-response was never captured. That the original failing run had **denominator 1** is
-an INFERENCE from the logged numbers, not a measurement: the demo printed
-unsupported_count=1, contradicted_count=0 and confidence 0.00; statuses are exactly
-("supported","contradicted","unsupported") (verifier.py:61); so supported=0 and
-claims = 0+1+0 = 1. Every run tonight extracted 9-10 claims, so whatever produced a
-1-claim draft is not reproduced here and is not characterised.
+**What V1 did NOT establish, and cannot.** The fail did not reproduce in 5 runs, so
+its raw response was never captured. Worse, the demo does not print `mode`, so the
+original run's log CANNOT say whether the LLM verdict or the lexical fallback
+produced it. Verbatim, the whole record of that run is:
+
+    verifier       fail          0.00    4010.5
+    WHY   : the evidence gate failed: 1 claim(s) not supported by any retrieved
+            document, 0 contradicted by one
+
+No mode, no caveat, no denominator, no timestamp. So whether that particular fail
+was an LLM verdict or a labelled fallback is UNRESOLVED and will stay unresolved --
+the evidence to settle it was never written down. What is settled is that either
+way it was a real verdict from a named checker, not a default.
+
+That the run had **denominator 1** is an INFERENCE from the logged numbers, not a
+measurement: unsupported_count=1, contradicted_count=0, confidence 0.00; statuses
+are exactly ("supported","contradicted","unsupported") (verifier.py:61); so
+supported=0 and claims = 0+1+0 = 1.
+
+**Next week's problem, not tonight's:** every run tonight extracted 9-10 claims; the
+failing run extracted 1. Synthesis has an uncharacterised short-output mode. That is
+verifier-ADJACENT, not verifier -- the gate behaved correctly on whatever it was
+handed. Printing `mode` on the trace row would also have made this a ten-second
+question instead of an unresolvable one.
 
 With denominator 1, 0.00 and 1.00 are the only attainable scores -- "flaky" is the
 wrong word for a two-valued statistic. The suspicious cell (0.00 with denominator

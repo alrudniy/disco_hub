@@ -1,0 +1,11 @@
+# pipeline_2 additional deps (on top of the base discovery_hub requirements).
+# Pinned loosely; the H100 image usually has torch already.
+torch>=2.1
+transformers>=4.44
+sentence-transformers>=3.0
+peft>=0.11
+safetensors>=0.4
+accelerate>=0.30
+faiss-cpu>=1.8
+numpy>=1.24
+requests>=2.31

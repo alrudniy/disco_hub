@@ -1,0 +1,19 @@
+# Data stays out of git. The excluded data/ is 253 MB and contains
+# multi_positive_labels_v1.jsonl (140 MB) -- over GitHub's 100 MB hard limit.
+data/
+*.jsonl
+*.npy
+*.faiss
+models/
+# Envs / caches
+venv/
+env/
+.venv*/
+__pycache__/
+*.py[cod]
+# Secrets
+.env
+*key*.json
+*.pem
+id_rsa*
+*token*

@@ -1,0 +1,68 @@
+[32mActivated conda/uv virtual environment at [36m/venv/main[0m
+loading corpus text ...
+  603369 docs
+loading vectors to GPU ...
+/workspace/dh_multiagent/bridge_hunt.py:125: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:213.)
+  Vg = torch.from_numpy(np.asarray(V, dtype=np.float32)).cuda()
+  (603369, 2560) on cuda:0
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 8007.08it/s]
+/workspace/dh_multiagent/discovery_hub/embedding.py:133: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.model.get_sentence_embedding_dimension()
+
+pair                                     pool  best rank     cos  verdict
+--------------------------------------------------------------------------------------------
+PD-L1 / B7-H1                              34         72   0.513  top-200
+PD-L1 / CD274                               3      12364   0.196  no bridge
+PD-1 / PDCD1                                6       3013   0.311  no bridge
+PD-1 / CD279                                3       2434   0.325  no bridge
+HER2 / ERBB2                              253          9   0.561  BRIDGE (top-10)
+HER2 / neu                                 45        125   0.442  top-200
+EGFR / ErbB-1                             723       1030   0.475  no bridge
+CTLA-4 / CD152                              7       1246   0.335  no bridge
+4-1BB / CD137                             160         13   0.508  top-50
+OX40 / CD134                                4       5976   0.238  no bridge
+LAG-3 / CD223                               3        970   0.338  no bridge
+TIM-3 / HAVCR2                              4       1209   0.338  no bridge
+B7-H3 / CD276                               6       5466   0.259  no bridge
+B7-H4 / VTCN1                               3        761   0.326  no bridge
+ICOS / CD278                                0         --      --  no legacy-only docs (vacuous)
+VEGF / vascular permeability factor         2       4548   0.327  no bridge
+TNF-alpha / cachectin                       2     299357  -0.041  no bridge
+IL-2 / T cell growth factor                 7       1813   0.281  no bridge
+trastuzumab / Herceptin                   126         55   0.442  top-200
+pembrolizumab / Keytruda                   24       2370   0.242  no bridge
+pembrolizumab / MK-3475                    26      10850   0.167  no bridge
+nivolumab / Opdivo                          7      56968   0.062  no bridge
+nivolumab / BMS-936558                      6       3727   0.222  no bridge
+semaglutide / Ozempic                       3     137871   0.026  no bridge
+GLP-1 / glucagon-like peptide              55         62   0.571  top-200
+aspirin / acetylsalicylic acid            130         17   0.495  top-50
+statin / HMG-CoA reductase inhibitor      109         33   0.591  top-50
+CAR-T / chimeric antigen receptor        1001          4   0.586  BRIDGE (top-10)
+
+============================================================================================
+BEST BRIDGES (a keyword search for the queried term CANNOT return these):
+
+  rank      4 of 603,369   cos 0.586   pool 1001   [CAR-T / chimeric antigen receptor]
+    query : 'CAR-T cell therapy for leukemia'
+    doc   : uspto:US11154572B2  'Methods of treatment with natural killer cells matched for killer immunoglobulin'
+
+  rank      9 of 603,369   cos 0.561   pool 253   [HER2 / ERBB2]
+    query : 'HER2 targeted therapy for breast cancer'
+    doc   : uspto:US11903948B2  'Anti-ErbB2 antibody-drug conjugate and composition thereof, preparation method t'
+
+  rank     13 of 603,369   cos 0.508   pool 160   [4-1BB / CD137]
+    query : '4-1BB agonist for T cell costimulation'
+    doc   : uspto:US10870688B2  'Single-chain CD137-receptor agonist proteins'
+
+  rank     17 of 603,369   cos 0.495   pool 130   [aspirin / acetylsalicylic acid]
+    query : 'aspirin for cardiovascular prevention'
+    doc   : uspto:US11958808B2  'Acetylsalicylic acid derivative and application thereof'
+
+  rank     33 of 603,369   cos 0.591   pool 109   [statin / HMG-CoA reductase inhibitor]
+    query : 'statin therapy for lowering cholesterol'
+    doc   : uspto:US8759518B2  'Intermediates for the preparation of HMG CoA reductase inhibitors and processes '
+
+  rank     55 of 603,369   cos 0.442   pool 126   [trastuzumab / Herceptin]
+    query : 'trastuzumab for HER2 positive breast cancer'
+    doc   : uspto:US12319748B2  'Antibody binding to human HER2 and preparation method and use thereof'

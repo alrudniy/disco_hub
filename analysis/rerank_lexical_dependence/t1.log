@@ -1,0 +1,129 @@
+[32mActivated conda/uv virtual environment at [36m/venv/main[0m
+building retriever (real) ...
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 8047.19it/s]
+/workspace/dh_multiagent/discovery_hub/embedding.py:133: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.model.get_sentence_embedding_dimension()
+[07] dh2.validate unavailable; skipping startup compat check (PYTHONPATH should include the pipeline tree)
+/workspace/dh_multiagent/t1_t2_forensics.py:45: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:213.)
+  V = torch.from_numpy(np.asarray(R.doc_vectors, dtype=np.float32)).cuda()
+retrieve run 1 ...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 8161.05it/s]
+retrieve run 2 ...
+
+CE model            : BAAI/bge-reranker-v2-m3
+/workspace/dh_multiagent/t1_t2_forensics.py:61: DeprecationWarning: The `max_length` property was renamed and is now deprecated. Please use `max_seq_length` instead.
+  print(f"CE max_length       : {ce.max_length}  (config getattr -> {max_len})")
+CE max_length       : 512  (config getattr -> 512)
+CE num_labels       : 1
+/workspace/dh_multiagent/t1_t2_forensics.py:63: DeprecationWarning: The `default_activation_function` property was renamed and is now deprecated. Please use `activation_fn` instead.
+  act = getattr(ce, "activation_fct", None) or getattr(ce, "default_activation_function", None)
+CE activation       : Sigmoid()
+embedder            : /workspace/models/qwen3-dh-ft-4b  dim=2560
+embedder max_seq_len: 512
+
+======================================================================================================================
+T1  ALL 50, rerank order
+======================================================================================================================
+rk_rr  rk_dense   score_rerank (full repr)  her2  n_tok  trunc  doc_id
+/workspace/dh_multiagent/t1_t2_forensics.py:79: DeprecationWarning: The `max_length` property was renamed and is now deprecated. Please use `max_seq_length` instead.
+  enc = tok(QUERY, txt, truncation=True, max_length=ce.max_length)
+/workspace/dh_multiagent/t1_t2_forensics.py:88: DeprecationWarning: The `max_length` property was renamed and is now deprecated. Please use `max_seq_length` instead.
+  "n_tok": n_tok, "n_tok_untrunc": n_full, "truncated": n_full > ce.max_length,
+/workspace/dh_multiagent/t1_t2_forensics.py:92: DeprecationWarning: The `max_length` property was renamed and is now deprecated. Please use `max_seq_length` instead.
+  f"{n_tok:>6} {str(n_full > ce.max_length):>6}  {c['doc_id']}")
+    1        46         0.6295952200889587  True    319  False  uspto:US12227591B2
+    2        39         0.6246486902236938  True    344  False  uspto:US11225509B2
+    3        31         0.6160587072372437  True    319  False  uspto:US11028182B2
+    4        49        0.26127883791923523  True    219  False  uspto:US11965036B2
+    5        50        0.25506672263145447  True    218  False  uspto:US10947319B2
+    6        22        0.24135823547840118  True    220  False  uspto:US12215166B2
+    7        26        0.23136284947395325  True    189  False  uspto:US10137203B2
+    8        29         0.1654394567012787  True    325  False  uspto:US11958910B2
+    9        27        0.16227371990680695  True    325  False  uspto:US12583939B2
+   10        11        0.10223028808832169  True    244  False  uspto:US10717772B2
+   11         5        0.09268739819526672  True    301  False  uspto:US11427575B2
+   12        35        0.09177816659212112  True    227  False  uspto:US12215156B2
+   13        17        0.07194443047046661  True    237  False  uspto:US12357701B2
+   14        19         0.0626155436038971  True    387  False  uspto:US9896466B2
+   15        24         0.0616888664662838  True    235  False  uspto:US11000598B2
+   16        37        0.05460000038146973  True    198  False  uspto:US11447492B2
+   17        47        0.04970027133822441  True    196  False  uspto:US11945877B2
+   18         4       0.024539267644286156  True    214  False  uspto:US9889134B2
+   19         3       0.024527914822101593  True    213  False  uspto:US9168254B2
+   20        23       0.023849111050367355  True    169  False  uspto:US12110341B2
+   21        33        0.02378995344042778  True    168  False  uspto:US11414498B2
+   22        30         0.0226431991904974  True    167  False  uspto:US11597776B2
+   23        36       0.022143006324768066  True    170  False  uspto:US10370414B2
+   24        45        0.02176462858915329  True    168  False  uspto:US12037330B2
+   25        43        0.02176462858915329  True    168  False  uspto:US12528799B2
+   26        44        0.02176462858915329  True    168  False  uspto:US12534457B2
+   27        18       0.018955349922180176  True    271  False  uspto:US9457093B2
+   28        16       0.018448755145072937  True    283  False  uspto:US7993650B2
+   29         1       0.017731323838233948  True    187  False  uspto:US12145948B2
+   30         6       0.016906272619962692  True    212  False  uspto:US10143692B2
+   31         2       0.016544431447982788  True    213  False  uspto:US10765678B2
+   32         7       0.016100207343697548  True    213  False  uspto:US11571424B2
+   33        20       0.015133905224502087  True    159  False  uspto:US9201061B2
+   34        14       0.013859900645911694  True    262  False  uspto:US11517632B2
+   35        13       0.013664507307112217  True    232  False  uspto:US11834453B2
+   36        15        0.01360820047557354  True    259  False  uspto:US12083193B2
+   37        32       0.011580085381865501  True    175  False  uspto:US7687061B2
+   38        34       0.008328080177307129  True    209  False  uspto:US9630993B2
+   39        40      0.0070009008049964905  True    209  False  uspto:US9884918B2
+   40        28       0.006688898894935846  True    189  False  uspto:US10717783B2
+   41        21        0.00630086800083518  True    157  False  uspto:US12076411B2
+   42        38       0.006297640968114138  True    235  False  uspto:US9808528B2
+   43        25       0.006281788926571608  True    158  False  uspto:US11097013B2
+   44         8      0.0060712662525475025  True    115  False  uspto:US7449480B2
+   45        12       0.005769612267613411  True     96  False  uspto:US7019017B2
+   46        42       0.002365324879065156 False    290  False  uspto:US11390685B2
+   47        10       0.002299641026183963 False    189  False  uspto:US8557242B2
+   48        48       0.001583923352882266 False    206  False  uspto:US9493542B2
+   49         9      0.0015290109440684319 False    201  False  uspto:US11903948B2
+   50        41      0.0009294279152527452 False    183  False  uspto:US7229960B2
+
+----------------------------------------------------------------------------------------------------------------------
+T1 ANSWERS
+----------------------------------------------------------------------------------------------------------------------
+  bridged (non-literal) docs: 5   literal: 45
+  bridged scores (full repr): ['0.002365324879065156', '0.002299641026183963', '0.001583923352882266', '0.0015290109440684319', '0.0009294279152527452']
+  identical to each other?    False  (5 distinct of 5)
+  any 0.0/None/NaN/inf?      False  []
+  distinct scores of 50:     48
+  score range:               min=0.0009294279152527452  max=0.6295952200889587
+  literal  min=0.005769612267613411
+  bridged  max=0.002365324879065156
+  separation (min_lit - max_bridged) = 0.003404287388548255
+  3 largest adjacent gaps in the sorted 50: [(0.35478, 46), (0.065923, 42), (0.060043, 40)]
+  -> continuum or two clusters? largest gap 0.35478 vs median gap 0.000909
+  deterministic across 2 runs? order=True  scores_bitwise=True
+
+======================================================================================================================
+T2  TEXT PARITY for uspto:US11903948B2
+======================================================================================================================
+  dense stage embedded : d.embedding_text  (538 chars)
+  BGE stage received   : d.embedding_text  (538 chars)
+  SAME SOURCE STRING?  : True
+/workspace/dh_multiagent/t1_t2_forensics.py:140: DeprecationWarning: The `max_length` property was renamed and is now deprecated. Please use `max_seq_length` instead.
+  b_trunc = tok(QUERY, bge_text, truncation=True, max_length=ce.max_length)["input_ids"]
+  encoder tokens (untruncated, doc only) : 224   max_seq_length=512 -> truncated=False
+/workspace/dh_multiagent/t1_t2_forensics.py:144: DeprecationWarning: The `max_length` property was renamed and is now deprecated. Please use `max_seq_length` instead.
+  f"max_length={ce.max_length} -> truncated={len(b_full) > ce.max_length}")
+  BGE tokens (untruncated, query+doc)    : 201   max_length=512 -> truncated=False
+  BGE tokens actually scored             : 201
+
+  full embedding_text of uspto:US11903948B2:
+---
+Anti-ErbB2 antibody-drug conjugate and composition thereof, preparation method therefor, and use thereof
+Provided is a preparation method of an antibody-drug conjugate represented by Formula (I), or a pharmaceutically acceptable salt or stereoisomer thereof, or a solvate of the foregoing,wherein A, X, Y, L, D and a are as defined herein.
+Keywords: A61K, A61P
+Organizations: SICHUAN KELUN BIOTECH BIOPHARMACEUTICAL CO LTD
+CPC: A61K47/68033, A61K47/68031, A61K47/68031, A61K47/68033, A61K47/68031, A61K47/68033, A61K47/68033, A61K47/68031
+---
+
+  of the 50 reranked pairs, truncated at BGE max_length: 0
+  truncated among literal : 0 / 45
+  truncated among bridged : 0 / 5
+
+wrote t1_rows.json

@@ -1,0 +1,45 @@
+[32mActivated conda/uv virtual environment at [36m/venv/main[0m
+building retriever ...
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 8248.06it/s]
+/workspace/dh_multiagent/discovery_hub/embedding.py:133: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.model.get_sentence_embedding_dimension()
+[07] dh2.validate unavailable; skipping startup compat check (PYTHONPATH should include the pipeline tree)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 7658.25it/s]
+
+==========================================================================================
+T4(b)  uspto:US12227591B2   substitutions made: 6
+==========================================================================================
+  title (orig): Antigen-binding constructs targeting HER2
+  title (new) : Antigen-binding constructs targeting ErbB2
+  n_tok orig/new: 319 / 331
+  chars orig/new: 1006 / 1012
+  score  0.6295958161354065  ->  0.007099485956132412
+  logit  +0.5305  ->  -4.9406     DELTA-LOGIT = -5.4711
+  rank   1  ->  38               DELTA-RANK  = +37
+  squashed contains 'her2'  orig=True  new=False
+  squashed contains 'erbb2' orig=False new=True
+
+==========================================================================================
+T4(a)  uspto:US11903948B2   substitutions made: 1
+==========================================================================================
+  title (orig): Anti-ErbB2 antibody-drug conjugate and composition thereof, preparation method
+  title (new) : Anti-HER2 antibody-drug conjugate and composition thereof, preparation method 
+  n_tok orig/new: 201 / 199
+  chars orig/new: 538 / 537
+  score  0.0015290072187781334  ->  0.008838118053972721
+  logit  -6.4816  ->  -4.7198     DELTA-LOGIT = +1.7618
+  rank   49  ->  38               DELTA-RANK  = -11
+  squashed contains 'her2'  orig=False  new=True
+  squashed contains 'erbb2' orig=True new=False
+
+==========================================================================================
+T4 SUMMARY  (criterion pre-registered; boundary = 0.8951 logits)
+==========================================================================================
+  (b) rank-1 rich doc,  HER2 -> ErbB2 : delta-logit -5.4711   delta-rank +37   (6 subs)
+  (a) ErbB2 bridge doc, ErbB2 -> HER2 : delta-logit +1.7618   delta-rank -11   (1 subs)
+
+  |delta(a)| = 1.7618   vs boundary 0.8951  -> >= boundary
+  |delta(b)| = 5.4711   vs boundary 0.8951  -> >= boundary
+  magnitude ratio |a|/|b| = 0.32
+  signs: (a) +  (b) -   (lexical prediction: a positive, b negative)

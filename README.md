@@ -185,8 +185,36 @@ Then the BGE cross-encoder reranks the 50-candidate pool:
 | do **not** (the bridged docs) | 5 | **46, 47, 48, 49, 50** |
 
 Exactly the last five. The ErbB2 patent lands **49th**. The reranked top-10 is **100%**
-literal-HER2. **The pipeline's final ranking stage — whose score this system reports as
-its confidence — orders like the keyword search the pitch says it beats.**
+literal-HER2.
+
+That partition is a correlation, so it was probed causally. Take the **rank-1** document,
+"Antigen-binding constructs targeting HER2", and rename HER2 → ErbB2 — the same protein,
+every other byte identical, still 331 tokens of on-topic antibody engineering:
+
+| intervention | Δ logit | Δ rank |
+|---|---:|---:|
+| rank-1 doc, HER2 → ErbB2 (6 subs) | **−5.4711** | 1 → **38** |
+| the ErbB2 patent, ErbB2 → HER2 (1 sub) | **+1.7618** | 49 → **38** |
+
+**The claim, and only this claim: the reranker carries a lexical dependence large enough,
+on this query, to bury a semantically identical document 37 places.**
+
+Three things it is **not**, each ruled out by a number above:
+
+- **Not a keyword filter.** The 45 literal docs span ~100× in score (0.0058–0.6296); the
+  model discriminates hard among them, and it disagrees with dense in both directions
+  (rerank #1 was dense #46; dense #1 fell to rerank #29).
+- **Not a constant lexical bonus.** −5.47 vs +1.76 is a 3.1× disagreement. Whether the
+  shape is dose-saturating (the rank-1 doc had 6 mentions, the bridge 1) or a context
+  interaction is **not yet established** — see `analysis/rerank_lexical_dependence/`.
+- **Not the whole story.** Giving the bridge document the magic token buys +1.76 logits —
+  to rank 38, **not into the top 10**. Surface form is a large part of what buries it and
+  not all of it; its Markush abstract genuinely says little.
+
+Ruled out as explanations: truncation (0 of 50 pairs truncated; both stages read the same
+538-char `embedding_text`), degenerate scores (5 distinct bridged values, no 0/NaN/floor),
+non-determinism (bitwise identical across runs), and a length confound (bridged median 201
+tokens vs literal 213, well inside the literal range).
 
 This is not a tuning problem, it is a locating one: the register-gap failure
 `pipeline_3`'s handoff attributes to fine-tuning is *also* present, undiluted, in the

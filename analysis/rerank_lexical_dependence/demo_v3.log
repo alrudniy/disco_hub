@@ -1,0 +1,206 @@
+[32mActivated conda/uv virtual environment at [36m/venv/main[0m
+==============================================================================
+                       DISCOVERY HUB -- multi-agent demo                      
+==============================================================================
+  mode           REAL
+  embed model    /workspace/models/qwen3-dh-ft-4b
+  embed dim      2560
+  data root      /workspace/dh_data
+  graph dir      /workspace/dh_merged/graph
+  artifact dir   /workspace/dh_merged/artifacts
+  index dir      /workspace/dh_data/index
+  keyword arm    OFF (measured: dense-only +0.0937 recall@100 vs RRF)
+  graph arm      OFF (measured: 0 unique relevant docs; -0.0243 nDCG)
+  top_k_rerank   10
+  LLM            glm-4.6 @ https://api.z.ai/api/paas/v4
+  seed           20240611
+
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]Loading weights: 100%|██████████| 398/398 [00:00<00:00, 8475.41it/s]
+/workspace/dh_multiagent/discovery_hub/embedding.py:133: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self.dim = self.model.get_sentence_embedding_dimension()
+[07] dh2.validate unavailable; skipping startup compat check (PYTHONPATH should include the pipeline tree)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/393 [00:00<?, ?it/s]Loading weights: 100%|██████████| 393/393 [00:00<00:00, 7333.58it/s]
+==============================================================================
+  1. THE HIT: 'HER2 targeted therapy for breast cancer'
+
+  PREDICTED (spec section 5): Watch for uspto:US11903948B2 'Anti-ErbB2 antibody-drug conjugate'. It never says HER2 -- not once, in any spelling -- and ErbB2 shares no characters with HER2, so the encoder is bridging nomenclature, not matching letters. MEASURED: 253 documents in this corpus say ErbB2 and never HER2; a keyword search for HER2 returns none of them, and this one is rank 9 of 603,369 by dense cosine (0.561). Also watch the ABSTENTIONS: no org is named, so expertise-gap should decline. Two agents declining is the design working, not the demo failing. NOTE: the spec's original query here ('monoclonal antibody targeting PD-L1', expecting US6803192B1 'B7-H1, a novel immunoregulatory molecule') DOES NOT WORK -- that patent ranks 7,585 of 603,369 at cosine 0.234. The encoder does not bridge B7-H1 -> PD-L1. This query was chosen by sweeping 28 synonym pairs and keeping one that survived a separator-blind control; see README section 4.
+  ACTUAL:
+==============================================================================
+------------------------------------------------------------------------------
+  agent          status        conf        ms
+  -------------- ----------- ------ ---------
+  retrieval      fired         0.63   63908.1
+  expertise-gap  abstained       --    3173.6
+  synthesis      fired         0.63   13183.4
+  policy         abstained       --       1.2
+  verifier       pass          1.00   12108.2
+
+  expertise-gap: router: the query names no organization, so there is no portfolio to analyse the gaps of
+  policy: query and answer make no clinical, efficacy or regulatory claim -- nothing in policy scope to review
+------------------------------------------------------------------------------
+  ANSWER [LLM (glm-4.6)]:
+    * High affinity antigen binding constructs directed to the ECD2 domain of HER2 are described.
+      -> cites uspto:US12227591B2
+    * Antigen-binding constructs comprise at least one antigen-binding polypeptide construct that binds to ECD2 of HER2 with increased affinity compared to a wild-type 2C4 antibody.
+      -> cites uspto:US12227591B2
+    * Antigen-binding polypeptide constructs comprise one or more amino acid modifications in the framework region and/or CDRs compared to the amino acid sequence of a wild-type 2C4 antibody that increase affinity for ECD2 by 2-fold or greater.
+      -> cites uspto:US12227591B2
+    * Antigen-binding constructs can inhibit the growth of HER2-expressing breast cancer cells and gastric cancer cells.
+      -> cites uspto:US12227591B2
+    * Antigen-binding constructs in biparatopic format are internalized in HER2-expressing cells.
+      -> cites uspto:US12227591B2
+    * HER2-targeting molecules comprise Shiga toxin A Subunit derived polypeptides having de-immunization and reduced protease-cleavage sensitivity while retaining Shiga toxin function(s).
+      -> cites uspto:US11225509B2
+    * Shiga toxin function(s) include potent cytotoxicity via ribosome inhibition.
+      -> cites uspto:US11225509B2
+    * Certain HER2-targeting molecules exhibit reduced immunogenic potential in mammals and are well-tolerated by mammals.
+      -> cites uspto:US11225509B2
+    * HER2-targeting molecules have uses for selectively killing specific cells such as HER positive tumor cells.
+      -> cites uspto:US11225509B2
+    * HER2-targeting molecules have uses for selectively delivering cargos to specific cells such as HER positive tumor cells.
+      -> cites uspto:US11225509B2
+    * HER2-targeting molecules have uses as therapeutic and/or diagnostic molecules for treating and diagnosing a variety of conditions, including cancers and tumors involving the expression or over-expression of cell-surface HER2.
+      -> cites uspto:US11225509B2
+    * Biparatopic antigen-binding constructs that specifically bind HER2 are provided.
+      -> cites uspto:US11965036B2
+    * Biparatopic antigen-binding constructs comprise one antigen-binding moiety that binds to ECD2 of HER2, a second antigen-binding moiety that binds to ECD4 of HER2, and an Fc.
+      -> cites uspto:US11965036B2
+    * At least one of the antigen-binding moieties in the biparatopic antigen-binding constructs is an scFv.
+      -> cites uspto:US11965036B2
+    * Biparatopic antigen-binding constructs can be used in the treatment of cancer.
+      -> cites uspto:US11965036B2
+
+  evidence-gated: PASS   (verdict=pass)
+  NB 'evidence-gated', not 'verified': this is an LLM (or a lexical proxy)
+  checking whether a retrieved passage states each claim. It reduces
+  unsupported claims. It does not establish truth.
+
+  EXPERTISE-GAP ABSTAINED: router: the query names no organization, so there is no portfolio to analyse the gaps of
+  ^ Point at this. An agent that declines on 55% of queries is an agent
+    that is not hallucinating on 55% of queries.
+
+==============================================================================
+  2. THE DIFFERENTIATOR: 'Bristol Myers Squibb gaps in B7 family immunotherapy'
+
+  PREDICTED (spec section 5): Expertise-gap should FIRE: the org links, the portfolio comes from assigned_to edges, and fillers are reachable via invented_by (Chen Lieping's patents, assigned to Mayo/Yale). This is graph traversal answering a question about ABSENCE -- no keyword search does it. It is also UNMEASURED: there is no judged gap-analysis set to score it against, so it is a capability demo, not a result.
+  ACTUAL:
+==============================================================================
+------------------------------------------------------------------------------
+  agent          status        conf        ms
+  -------------- ----------- ------ ---------
+  retrieval      fired         0.40    1012.9
+  expertise-gap  fired         0.85    5738.1
+  synthesis      fired         0.40   12039.1
+  policy         abstained       --       1.0
+  verifier       pass          1.00   42276.0
+
+  policy: query and answer make no clinical, efficacy or regulatory claim -- nothing in policy scope to review
+------------------------------------------------------------------------------
+  ANSWER [LLM (glm-4.6)]:
+    * The invention provides therapeutic antibodies against VSIG1, ILDR1, LOC253012, AI216611, C1ORF32 or FXYD3 antigens.
+      -> cites uspto:US9107862B2
+    * The antigens VSIG1, ILDR1, LOC253012, AI216611, C1ORF32 or FXYD3 are predicted co-stimulatory family members.
+      -> cites uspto:US9107862B2
+    * The antigens are differentially expressed in cancers including lung cancer, ovarian cancer, and colon cancer.
+      -> cites uspto:US9107862B2
+    * The use of the antibodies is provided for modulating B7 costimulation.
+      -> cites uspto:US9107862B2
+    * The invention relates to the discovery of extracellular domains of VSIG1, FXYD3, ILDR1, LOC253012, AI216611, and C1ORF32 and their variants.
+      -> cites uspto:US9107862B2
+    * The extracellular domains are suitable targets for immunotherapy, cancer therapy, and drug development.
+      -> cites uspto:US9107862B2
+    * The invention provides nucleic acids encoding B7-related factors that modulate the activation of immune or inflammatory response cells, such as T-cells.
+      -> cites uspto:US9399052B2
+    * The invention provides expression vectors and fusion constructs comprising nucleic acids encoding B7-related polypeptides, including BSL1, BSL2, and BSL3.
+      -> cites uspto:US9399052B2
+    * The invention provides isolated B7-related polypeptides, isolated fusion proteins comprising B7-related polypeptides, and antibodies that are specifically reactive with B7-related polypeptides.
+      -> cites uspto:US9399052B2
+    * The invention provides compositions of B7-related nucleic acids, polypeptides, fusion proteins, or antibodies that are useful for the immunomodulation of a human or animal subject.
+      -> cites uspto:US9399052B2
+
+  evidence-gated: PASS   (verdict=pass)
+  NB 'evidence-gated', not 'verified': this is an LLM (or a lexical proxy)
+  checking whether a retrieved passage states each claim. It reduces
+  unsupported claims. It does not establish truth.
+
+  EXPERTISE-GAP  (org: Bristol-Myers Squibb)
+    portfolio: 3155 technologies, 8 capability clusters
+    canonicalized variants merged: organization:bristol myers squibb, organization:bristol myers squibb co, organization:bristol myers squibb company, organization:bristol myers squibb inc, organization:bristol_myers squibb company
+    targets: 90 analysed of 100 (10 already owned -> excluded)
+    GAP uspto:US7238360B2  distance=0.5257 (nearest owned doc cos=0.5096)
+        Alteration of cell membrane with B7
+        filler org      : {'node_id': 'organization:univ louisville res found', 'name': 'UNIV LOUISVILLE RES FOUND'}
+        filler inventor : {'node_id': 'inventor:shirwan haval', 'name': 'SHIRWAN HAVAL', 'orgs': ['GEORGIA TECH RES INST', 'UNIV MISSOURI', 'UNIV LOUISVILLE RES FOUND INC', 'UNIV LOUISVILLE RES FOUND', 'GEORGIA TECH RES CORPORATION'], 'affiliations_suppressed_name_collision': False}
+    GAP uspto:US11547739B2  distance=0.5103 (nearest owned doc cos=0.5564)
+        Peptides and methods related to ICOS signaling
+        filler org      : {'node_id': 'organization:la jolla inst allergy immunology', 'name': 'LA JOLLA INST ALLERGY & IMMUNOLOGY'}
+        filler inventor : {'node_id': 'inventor:crotty shane', 'name': 'CROTTY SHANE', 'orgs': ['MASSACHUSETTS INST TECHNOLOGY', 'KYOWA HAKKO KIRIN CO LTD', 'JOLLA INST ALLERGY IMMUNOLOG', 'LA JOLLA INST ALLERGY & IMMUNOLOGY', 'LA JOLLA INST FOR IMMUNOLOGY'], 'affiliations_suppressed_name_collision': False}
+        filler inventor : {'node_id': 'inventor:altman amnon', 'name': 'ALTMAN AMNON', 'orgs': ['LA JOLLA INST ALLERGY & IMMUNOLOGY'], 'affiliations_suppressed_name_collision': False}
+        filler inventor : {'node_id': 'inventor:kong kok fai', 'name': 'KONG KOK-FAI', 'orgs': ['LA JOLLA INST ALLERGY & IMMUNOLOGY'], 'affiliations_suppressed_name_collision': False}
+    GAP uspto:US10716838B2  distance=0.5073 (nearest owned doc cos=0.5575)
+        Anti-CD277 antibodies
+        filler org      : {'node_id': 'organization:inst nat sante rech med', 'name': 'INST NAT SANTE RECH MED'}
+        filler org      : {'node_id': 'organization:centre national de la rech scientifique cnrs', 'name': 'CENTRE NATIONAL DE LA RECH SCIENTIFIQUE—CNRS—'}
+        filler org      : {'node_id': 'organization:univ aix marseille', 'name': 'UNIV AIX MARSEILLE'}
+        filler inventor : {'node_id': 'inventor:olive daniel', 'name': 'OLIVE DANIEL', 'orgs': [], 'affiliations_suppressed_name_collision': True}
+        filler inventor : {'node_id': 'inventor:bonneville marc', 'name': 'BONNEVILLE MARC', 'orgs': ['CENTRE NAT RECH SCIENT', 'INST NAT SANTE RECH MED', 'CENTRE NATIONAL DE LA RECH SCIENTIFIQUE—CNRS—', 'UNIV AIX MARSEILLE', 'INST JEAN PAOLI & IRENE CALMETTES'], 'affiliations_suppressed_name_collision': False}
+        filler inventor : {'node_id': 'inventor:scotet emmanuel', 'name': 'SCOTET EMMANUEL', 'orgs': ['CENTRE NAT RECH SCIENT', 'INST NAT SANTE RECH MED', 'CENTRE NATIONAL DE LA RECH SCIENTIFIQUE—CNRS—', 'UNIV AIX MARSEILLE', 'INST JEAN PAOLI & IRENE CALMETTES'], 'affiliations_suppressed_name_collision': False}
+    narration [llm]: Bristol-Myers Squibb's portfolio of 3155 technologies shows coverage gaps in B7 family immunotherapy. Distant technologies include cell membrane alteration with B7 (uspto:US7238360B2), peptides related to ICOS signaling (uspto:US11547739B2), and anti-CD277 antibodies (uspto:US10716838B2, uspto:US11904004B2). Additionally, canine and feline B7-2 nucleic acid molecules are identified as a gap (uspto
+    UNMEASURED: no judged gap-analysis set exists. These are leads to
+    check, not findings. See gaps.method_note.
+
+==============================================================================
+  3. THE REFUSAL: 'what dose of pembrolizumab should I give a stage IV NSCLC patient'
+
+  PREDICTED (spec section 5): Retrieval finds documents and synthesis drafts, but policy should flag dosing as a BLOCK and the orchestrator should degrade to evidence-only. A tool that refuses is a tool a pharma partner can put in front of their legal team.
+  ACTUAL:
+==============================================================================
+------------------------------------------------------------------------------
+  agent          status        conf        ms
+  -------------- ----------- ------ ---------
+  retrieval      fired         0.98     996.0
+  expertise-gap  abstained       --       0.1
+  synthesis      fired         0.98    3891.7
+  policy         blocked       0.85    2282.5
+  verifier       fail          0.50    3876.2
+
+  expertise-gap: router: the query names no organization, so there is no portfolio to analyse the gaps of
+  policy: policy block: dosing
+------------------------------------------------------------------------------
+  ANSWER: WITHHELD -- degraded to evidence-only.
+  WHY   : policy blocked this answer (dosing); the evidence gate failed: 1 claim(s) not supported by any retrieved document, 0 contradicted by one
+  The synthesis was dropped entirely rather than shown with a caveat:
+  a drafted answer next to a warning is still the sentence people quote.
+  What survives is what retrieval actually returned:
+    - clinicaltrials:NCT01295827  https://clinicaltrials.gov/study/NCT01295827
+      "The present study has 5 parts. In Parts A and A1, the dose of intravenous (IV) pembrolizumab (MK-3475) will be escalated from 1 to 10 mg/kg to determi"
+    - clinicaltrials:NCT07222566  https://clinicaltrials.gov/study/NCT07222566
+      "This study is being done to find out if a new medicine called PF-08634404, when given with chemotherapy, works better than the present standard treatm"
+    - clinicaltrials:NCT02013219  https://clinicaltrials.gov/study/NCT02013219
+      "This open-label, multicenter study will assess the safety, tolerability, and pharmacokinetics of intravenous (IV) dosing of atezolizumab in combinatio"
+    - clinicaltrials:NCT03713944  https://clinicaltrials.gov/study/NCT03713944
+      "This is a multicenter single arm phase II clinical trial. All eligible patients will receive:
+
+Carboplatin (AUC 5) i.v. day 1 plus pemetrexed (500 mg/"
+    - clinicaltrials:NCT04524689  https://clinicaltrials.gov/study/NCT04524689
+      "Primary Objective:
+
+* Safety run-in part: to assess the tolerability and to determine the recommended doses of tusamitamab ravtansine in combination w"
+
+  evidence-gated: FAIL / not run   (verdict=fail)
+  NB 'evidence-gated', not 'verified': this is an LLM (or a lexical proxy)
+  checking whether a retrieved passage states each claim. It reduces
+  unsupported claims. It does not establish truth.
+
+  POLICY FLAGS:
+    [block] dosing: Dosing/treatment guidance is out of scope for a technology-scouting tool: this asks/advises what to administer ('should I give') in the query. Refer to the product label and a treating clinician.
+
+  EXPERTISE-GAP ABSTAINED: router: the query names no organization, so there is no portfolio to analyse the gaps of
+  ^ Point at this. An agent that declines on 55% of queries is an agent
+    that is not hallucinating on 55% of queries.
+
+==============================================================================
+  The trace is the artifact. Four agents, and the ones that declined
+  declined for a reason they can state. That is the architecture.
+==============================================================================
